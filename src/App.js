@@ -1,24 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import Adminlogin from "./components/Login";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import AdminDashboard from "./components/Dashboard";
+import Cardetails from "./components/Cardetails";
+import Grid from "./components/Grid";
+import AuthProvider from "./contexts/Provider";
+import ProtectedRoute from "./utils/ProtectedRoute";
+import { Redirect } from "react-router-dom";
+import History from "./components/History";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <AuthProvider>
+        <div className="App">
+          <Switch>
+            <Route path="/login">
+              <Adminlogin />
+            </Route>
+          </Switch>
+          <div className="content">
+            <Switch>
+              <ProtectedRoute path="/dashboard" component={AdminDashboard} />
+              <ProtectedRoute path="/cardetails" component={Cardetails} />
+              <ProtectedRoute path="/parkingspace" component={Grid} />
+              <ProtectedRoute path="/history/:id" component={History} />
+              <Redirect from="/" to="/login" />
+            </Switch>
+          </div>
+        </div>
+      </AuthProvider>
+    </Router>
   );
 }
 
